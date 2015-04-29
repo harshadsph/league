@@ -1,0 +1,81 @@
+<?php
+
+function angularjs_calendar_init(){
+
+      global $base_path;
+      global $base_url;
+
+     $my_base_path = $GLOBALS['base_url'] . $GLOBALS['base_path'];
+    // or $my_base_path = $base_url . $base_path;
+
+
+       $my_settings = array(
+         'basePath' => $base_path         
+       );
+
+     drupal_add_js(array('angularjs_calendar' => array('basepath' => $my_base_path)), 'setting');
+
+
+}
+
+ /**  implements hook_block_info*/
+ function angularjs_calendar_block_info(){
+ 		drupal_add_library('angularjs','angularjs');
+ 		$blocks = array();
+		$blocks['angularjs_calendar_block'] = array(
+			'info' => t('AngularJS calendar block'),
+		);
+		return $blocks;
+ } 
+ 
+ /**
+* Implements hook_block_view().
+*/
+function angularjs_calendar_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'angularjs_calendar_block':
+      $block['subject'] = 'Calendar';
+      $block['content'] = '<div ng-app="angularjsCalendar" ng-controller="angularjscalendarcontroller" angularjs-calendar></div>';
+      break;
+  }
+  return $block;
+}
+ 
+ 
+  
+
+ 
+
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 

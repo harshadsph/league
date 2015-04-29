@@ -1,0 +1,14 @@
+name = AngularJS Calendar
+description = A module to create angularjs calendar.
+package = calendar
+core = 7.x
+
+scripts[] = js/app.js
+scripts[] = js/lib/moment.js
+scripts[] = js/lib/ui-bootstrap-tpls-0.12.1.min.js
+scripts[] = js/service/service.js
+scripts[] = js/directive/directive.js
+scripts[] = js/controller/angularjsCalendar.js
+
+stylesheets[all][] = css/angularjs_calendar.css
+

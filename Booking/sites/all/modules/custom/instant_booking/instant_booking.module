@@ -1,0 +1,379 @@
+<?php
+
+define('LOCATION_CONTENT_TYPE', 'location');
+define('TAXONOMY_FEATURE', 'sports');
+
+
+/*
+ * hook_theme
+ */
+ function instant_booking_theme($existing, $type, $theme, $path){
+ 	
+ 	return array(
+      'instant_booking_theme' => array(
+      'template' => 'instant-booking-theme',
+      'path' => $path . '/theme',
+      'variables' => array('title' => NULL),
+    ),
+  );	 
+ }
+ 
+ 
+/* 
+ * hook_menu*/
+ 
+ function instant_booking_menu(){
+	 $items['instant_booking'] = array(
+		'title' => 'Instant Booking',
+		'description' => 'No need to sign up just do the booking',
+		'page callback' => 'instant_booking_render',		
+		'access callback' => TRUE,
+		
+	 );
+	 
+	 $items['save-node-event'] = array(
+		'title' => 'save node event',
+		'description' => 'No need to sign up just do the booking',
+		'page callback' => 'save_instant_booking', 
+  		'access callback' => TRUE,
+  		'type' => MENU_CALLBACK,	
+	 );
+	 
+	 return $items;
+ }
+ 
+function league_get_term_from_name($term_name, $vocabulary_name) {
+  if ($vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name)) {
+    $tree = taxonomy_get_tree($vocabulary->vid);
+    foreach ($tree as $term) {
+      if ($term->name == $term_name) {
+        return $term->tid;
+      }
+    }
+  }
+  return FALSE;
+}
+ 
+ function save_instant_booking(){
+ 	
+ 	$request =  file_get_contents("php://input"); 	
+ 	$input = json_decode($request);
+ 	
+ 	$node 			= new stdClass();
+  	$node->title    = $input->sport."-".$input->location;
+  	$node->type 	= 'event_calendar';
+  	$node->language = LANGUAGE_NONE;
+
+	$node->language 								= 'en';
+    $field_langcode 								= field_language('node', $node, 'body');
+  	$node->body[$field_langcode][0]['value']   		= $input->description;
+    $node->body[$field_langcode][0]['format']  		= filter_default_format();     
+    $node->field_location['und'][0]['target_id'] 	= $input->location_nid;
+    
+  	$sportsArray = explode(',', $input->sport);
+    foreach ($sportsArray as $value) {
+    	$termId = league_get_term_from_name($value, TAXONOMY_FEATURE);
+    	if($termId){
+    		$node->field_event_sports['und'][0] = array('tid' =>$termId);    
+    	}    	
+	}
+    
+    $node->event_calendar_date['und'][0]['value'] = date("Y-m-d",strtotime(str_replace('/', '-', $input->start_date)));
+    $node->event_calendar_date['und'][0]['value2'] = date("Y-m-d",strtotime(str_replace('/', '-', $input->start_date)));
+    $node->field_slots['und'][0]['target_id'] = $input->slots_nid;
+    $node->status = 1; 
+    
+    if($user = user_load_by_name($input->email)){
+    	$node->uid = $user->uid;
+    }else{
+    	create_new_user($input);
+    	$user = user_load_by_name($input->email);
+    	$node->uid = $user->uid;
+    }
+    
+ 	node_save($node);
+ 	echo json_encode(createJsonResponse("Event has been created successfully",null));
+}
+
+function createJsonResponse($success, $errorMessage){
+	$obj = new stdClass();
+	if($success){
+		$obj->success = $success;
+	}
+	$obj->error = $errorMessage;
+	return $obj;
+	
+}
+
+function create_new_user($input){
+	
+	$pass = randomPassword();
+	$new_user = array(
+		  'name' => $input->email,
+		  'mail' => $input->email,
+		  'pass' => $pass,
+		  'status' => 1,
+		  'field_contact_no_' => array(LANGUAGE_NONE => array(array('value' => $input->contact_no))), 
+		  'access' => REQUEST_TIME,
+		  'roles' => array(), 
+	);
+	user_save(NULL, $new_user);	
+}
+
+function randomPassword() {
+    $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < 8; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
+    }
+    return implode($pass); //turn the array into a string
+}
+
+
+ 
+ function instant_booking_render(){
+ 	/*return theme('instant_booking_theme'); */	
+ 	return drupal_get_form('instant_booking_form'); 	
+ }
+ 
+ 
+ function instant_booking_form($form, &$form_submit){
+ 	
+ 	drupal_add_library('angularjs','angularjs');
+  
+ 	
+ 	 $form['#prefix'] = '<div ng-app="bookingApp" id="instantBooking" ng-controller="bookingcontroller">';
+     $form['#suffix'] = '</div>';
+ 	
+	 $form['name'] = array(
+		'#title' => t('Name'),
+		'#type'	=> 'textfield',
+		'#attributes' => array(
+      		'ng-model' => 'event.name',
+     		'placeholder' => t('Please enter your full name'),
+      		// HTML5 attribute to Prevent from autocomplete to hide our table.
+      		'autocomplete' => 'off',
+      		
+    	),
+    	'#ng_controller' => 'instantBookingController',
+		'#required' => TRUE,
+		'#description' => 'Please enter full name'
+	 );
+	 
+	 $form['contact_no'] = array(
+		'#title' => t('Contact No.'),
+		'#type'	=> 'textfield',
+		'#attributes' => array(
+      		'ng-model' => 'event.contactNo',
+     		'placeholder' => t('Please enter valid contact number'),
+      		// HTML5 attribute to Prevent from autocomplete to hide our table.
+      		'autocomplete' => 'off',
+      		'class' => array('form-control col-sm-6'),	
+    	),
+    	'#ng_controller' => 'instantBookingController',
+		'#required' => TRUE,
+		'#description' => 'Please enter valid contact number'
+	 );
+	 
+	 $form['email'] = array(
+		'#title' => t('Email'),
+		'#type'	=> 'textfield',
+		'#attributes' => array(
+      		'ng-model' => 'event.email',
+     		'placeholder' => t('Please enter valid email'),
+      		// HTML5 attribute to Prevent from autocomplete to hide our table.
+      		'autocomplete' => 'off',
+      		'class' => array('form-control col-sm-6'),	
+    	),
+    	'#ng_controller' => 'instantBookingController',
+		'#required' => TRUE,
+		'#description' => 'Please enter valid email'
+	 );
+	 
+	 $form['node_type'] = array(
+	    '#type' => 'ng_select',
+	    '#title' => t('Location'),
+	    '#options' => array(),
+	    '#default_value' => t('Please select location'),
+	    '#ng_model' => 'event.location',
+	    '#ng_controller' => 'instantBookingController',
+	    '#attributes' => array(
+	      'class' => array('form-control col-sm-6'),	
+	      'ng-change' => 'loadSports()',
+	    ),
+  	);
+	 
+	 $form['sports'] = array(
+	 	'#type' => 'ng_select',
+	    '#title' => t('Sports'),
+	    '#options' => array(),
+	    '#default_value' => t('Please select Sports'),
+	    '#ng_model' => 'event.sports',
+	    '#ng_controller' => 'instantBookingController',
+	    '#attributes' => array(
+	       'class' => array('form-control col-sm-6'),	
+	       'ng-change' => 'loadSlots()',
+	    ),
+	 );
+	 
+	 $form['slots'] = array(
+	 	'#type' => 'ng_select',
+	    '#title' => t('Slots'),
+	    '#options' => array(),
+	    '#default_value' => t('Please select Slots'),
+	    '#ng_model' => 'event.slots',
+	    '#ng_controller' => 'instantBookingController',
+	    '#attributes' => array(
+	     	'class' => array('form-control col-sm-6'),	
+	      	'ng-change' => 'loadSlotsTime()',
+	    ),
+	 );
+	 
+	 $form['time'] = array(
+	 	'#type' => 'ng_select',
+	    '#title' => t('Available Slots Time'),
+	    '#options' => array(),
+	    '#default_value' => t('Please select available slots time'),
+	    '#ng_model' => 'event.time',
+	    '#ng_controller' => 'instantBookingController',
+	    '#attributes' => array(
+	       	'class' => array('form-control col-sm-6'),	
+	      	'ng-change' => 'loadSlotsPrice()',
+	    ),
+	 );
+	 
+	 $form['price'] = array(
+		  '#markup' => '<h2 ng-show="priceDisplay"><span class="label label-default"><b>Total Price : {{event.price}} SGD</span></h2>'
+	  );
+	 
+	 $form['description'] = array(
+		'#title' => t('Description'),
+		'#attributes' => array(
+      		'ng-model' => 'event.description',     		
+    	),
+    	'#ng_controller' => 'instantBookingController',
+		'#type'	=> 'textarea',
+		'#rows' => 3, 
+		'#description' => 'Please enter any requirments'
+	 );
+	 
+	 $form['start_date'] = array(
+		'#title' => t('Start Date'),
+		'#type'	=> 'date_popup',
+		'#attributes' => array(
+      		'ng-model' => 'event.startDate',     		
+    	),
+		'#ng_controller' => 'instantBookingController',
+		'#required' => TRUE,
+		'#date_format' => 'd/m/Y',
+		'#description' => 'Please enter event date'
+	 );
+	 
+	 $form['submit'] = array(
+		'#type' => 'button',
+		'#value' => 'Submit',
+		'#attributes' => array('ng-click' => 'submitEvent()'),
+	 );
+	 
+	 drupal_add_js(drupal_get_path('module', 'instant_booking') . '/js/service/instantBookingService.js', array('type' => 'file', 'scope' => 'footer'));
+	 drupal_add_js(drupal_get_path('module', 'instant_booking') . '/js/controller/instantBookingController.js', array('type' => 'file', 'scope' => 'footer'));
+
+	 return $form;
+ }
+ 
+ 
+ 
+  /**  implements hook_block_info*/
+  
+ function instant_booking_block_info(){
+		$blocks = array();
+		$blocks['instant_booking_block'] = array(
+			'info' => t('instant booking block'),
+		);
+		return $blocks;
+ } 
+ 
+ /**
+* Implements hook_block_view().
+*/
+function instant_booking_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'instant_booking_block':
+      $block['subject'] = 'Instant Booking';
+      $block['title_suffix'] = '<span class="label label-success">Success</span>';
+      $block['content'] = drupal_get_form('instant_booking_form');
+      break;
+  }
+  return $block;
+}
+
+
+ /** Implements dropdown using taxonomy terms*/
+ 
+ function get_sports_dropdown_terms_name(){
+ 	$taxonomy_feature = taxonomy_vocabulary_machine_name_load(TAXONOMY_FEATURE);
+ 	$taxonomy_tree = taxonomy_get_tree($taxonomy_feature->vid);
+    $terms = array();
+
+    foreach ($taxonomy_tree as $term) {
+    	$terms[$term->tid] = $term->name;
+    }
+ 	
+ 	return $terms; 	
+ } 
+ 
+
+ /** Implements dropdown using node of location*/
+ 
+ 
+ function get_location_dropdown(){
+ 	 	$location = array();
+ 	 	
+ 	 	$results = db_query("SELECT * FROM {node} WHERE type = :type ", array(':type' => LOCATION_CONTENT_TYPE));	
+ 	 	foreach($results as $result) {
+		  $location[$result->nid] = $result->title;
+		}
+ 	 		
+ 	 	return $location;
+ }
+ 
+ 
+  
+
+ 
+
+ 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 

@@ -1,0 +1,4 @@
+name = Instant Booking
+description = A module to create instant booking form.
+package = Instant Booking
+core = 7.x

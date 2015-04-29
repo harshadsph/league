@@ -1,0 +1,60 @@
+@CHARSET "ISO-8859-1";
+
+html, body { 
+  background: url(../images/backgrounds.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  
+}
+
+.league-success{
+	  background-color: #5cb85c;
+	  text-align: left;
+	  margin: 20px 0;
+	  width: 100%;
+	  padding: 10px;
+	  color: #FFF;
+	  font-weight: normal;
+	  width: 100%;
+	  display: -webkit-inline-box;
+}
+
+.booking-calender{
+	height: inherit;
+}
+
+ #navbar.container{
+ 	 width: 100% !important;
+     max-width: 100%
+  }
+  
+  .container {
+    width: 95% !important;
+  }
+  
+  
+  .block{
+  	margin-right: 20px;
+  }
+  
+
+.navbar .logo img{
+	width:50px;
+	
+}
+.region-navigation .social-media-links{
+	float: right;
+}
+
+.page-header{
+	display: none;
+}
+
+.form-type-ng-select{
+	width: 45%;
+	float: left;
+	margin-right : 10px;
+}
+

@@ -1,0 +1,75 @@
+/* This file will hold styles for the mobile version of your website (mobile first). */
+/* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
+
+html { 
+  background: url(../images/backgrounds.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #FFF;
+}
+input, select{
+	width: 100%;
+}
+
+.zone-user-wrapper{
+	background-color: #EFEFEF;
+}
+.zone-branding-wrapper, .zone-header-wrapper, .view-calendar-2, .block-instant-booking{
+	background-color: #FFF;
+}
+.zone-preface-wrapper{
+	margin: 20px 0;
+}
+.logo-img img{
+	width: 120px;
+}
+
+.view, .block-instant-booking{
+	border-radius: 4px;
+	color: #000;
+}
+
+.view-calendar-2 .view-header .date-heading{
+	Color: #000;
+	width: 50%;
+	margin: 0 auto;
+	top: 18px;
+}
+
+.view .date-nav-wrapper .date-prev , .view .date-nav-wrapper .date-next {
+	color: white;
+	border-radius: 4px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	top: 18px;
+	margin: 0px 20px
+}
+
+.view .date-nav-wrapper .date-prev{
+	background: rgb(28, 184, 65); /* this is a green */
+}
+
+.view .date-nav-wrapper .date-next{
+	background: rgb(202, 60, 60); /* this is a maroon */
+}
+.view .date-nav-wrapper .date-prev  a, .view .date-nav-wrapper .date-next a{
+	background: none;
+}
+
+.view .date-nav-wrapper{
+	margin-top: 0px;
+}
+
+.pager{
+	border: 0px;
+	top: -34px;
+}
+
+.block-instant-booking{
+	padding: 20px;
+}
+
+
+
+

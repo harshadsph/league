@@ -1,0 +1,82 @@
+@CHARSET "ISO-8859-1";
+
+
+
+.active{
+	background-color:  #337AB7;
+	width: 100%; 
+	height: 100%; 
+	display: block;
+	opacity: 0.6;
+	color : #FFF;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button-title{
+	float: right;
+  	margin-left: 2px;
+	
+}
+
+.calendar-a, .calendar-a:hover, .calendar-a:visited, .calendar-a:active, .calendar-a:link{
+	text-decoration: none;
+	color: inherit;	
+}
+
+.calendar-a:active {
+    background-color: #FFF;
+     width: 70px;
+     height: 74px;
+}
+
+.calendar-a:hover{
+	font-weight: bold;
+}
+
+.block-angularjs-calendar table tr td{
+	position: relative;
+}
+
+.block-angularjs-calendar table tr td a.btn{
+	padding: 3px 8px;
+}
+
+.block-angularjs-calendar table tr td a span{
+	display: block;
+}
+
+#MONTHMODEL .modal-content, #YEARMODEL .modal-content{
+	width: 210px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#MONTHMODEL .modal-content .btn{
+	width: 50px;
+}
+
+#MONTHMODEL .modal-content .btn, #YEARMODEL .modal-content .btn{
+	height: 31px;
+  	margin: 1px;
+}
+
+.block-angularjs-calendar table{
+	margin-bottom: 2px;
+}
+
+.user-clicked {
+    background-color: #5CB85C;
+    font-weight: bold;
+    color: #FFF;
+    border: #5CB85C ridge 3px !important;
+    opacity: 0.6;
+    text-shadow: 2px 2px #000;
+}
+
+.glyphicon{
+	position: absolute !important;
+  	top: 22px !important;
+  	right: 1px;
+}
+

@@ -1,0 +1,84 @@
+<!-- Month modal -->
+<button type="button" class="btn btn-primary button-title" data-toggle="modal" data-target="#MONTHMODEL">Month</button>
+
+<div class="modal fade" id="MONTHMODEL" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+   <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Select a Month</h4>
+      </div>
+      <div class="modal-body">
+        <table>
+	    <tbody>
+	      <tr>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(0)">Jan</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(1)">Feb</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(2)">Mar</button></td>
+	      </tr>
+	       <tr>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(3)">Apr</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(4)">May</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(5)">Jun</button></td>
+	      </tr>
+	       <tr>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(6)">Jul</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(7)">Aug</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(8)">Sep</button></td>
+	      </tr>
+	       <tr>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(9)">Oct</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(10)">Nov</button></td>
+	        <td><button type="button" class="btn btn-primary" data-ng-click="selectMonth(11)">Dec</button></td>
+	      </tr>
+	     </tbody>
+        </table>
+      </div>
+      </div><!-- /.modal-content -->
+  </div>
+</div>
+
+<!-- Year modal -->
+<button type="button" class="btn btn-primary button-title" data-toggle="modal" data-target="#YEARMODEL">Year</button>
+
+<div class="modal fade" id="YEARMODEL" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Select a Year</h4>
+      </div>
+      <div class="modal-body">
+        <table>
+	    <tbody>
+	      <tr>
+	        <td><button type="button" class="btn btn-warning" data-ng-click="selectYear(-6)">{{titleYear-6}}</button></td>
+	        <td><button type="button" class="btn btn-warning" data-ng-click="selectYear(-5)">{{titleYear-5}}</button></td>
+	        <td><button type="button" class="btn btn-warning" data-ng-click="selectYear(-4)">{{titleYear-4}}</button></td>
+	      </tr>
+	       <tr>
+	        <td><button type="button" class="btn btn-warning" data-ng-click="selectYear(-3)">{{titleYear-3}}</button></td>
+	        <td><button type="button" class="btn btn-warning" data-ng-click="selectYear(-2)">{{titleYear-2}}</button></td>
+	        <td><button type="button" class="btn btn-warning" data-ng-click="selectYear(-1)">{{titleYear-1}}</button></td>
+	      </tr>
+	       <tr>
+	        <td><button type="button" class="btn btn-success" data-ng-click="selectYear(0)">{{titleYear}}</button></td>
+	        <td><button type="button" class="btn btn-danger" data-ng-click="selectYear(1)">{{titleYear+1}}</button></td>
+	        <td><button type="button" class="btn btn-danger" data-ng-click="selectYear(2)">{{titleYear+2}}</button></td>
+	      </tr>
+	       <tr>
+	        <td><button type="button" class="btn btn-danger" data-ng-click="selectYear(3)">{{titleYear+3}}</button></td>
+	        <td><button type="button" class="btn btn-danger" data-ng-click="selectYear(4)">{{titleYear+4}}</button></td>
+	        <td><button type="button" class="btn btn-danger" data-ng-click="selectYear(5)">{{titleYear+5}}</button></td>
+	      </tr>
+	     </tbody>
+        </table>
+      </div>    
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-ng-click="selectYear()">Current Date</button>        
+      </div> 
+    </div>
+  </div>
+</div>
+
+
